@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sunshine RP - Portal Oficial y Normativas de GTA V Roleplay</title>
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Portal oficial del servidor de GTA V Roleplay Sunshine RP. Infórmate sobre nuestras normativas generales, facciones, guías e intégrate a nuestra comunidad.">
+  <meta name="keywords" content="FiveM, GTA V, Roleplay, Sunshine RP, Normativas, Reglamento, LSPD, FiveM Server, Servidor de Rol">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Esferas de brillo estéticas de fondo (Floating Orbs) -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <!-- ==========================================
+       BARRA DE NAVEGACIÓN (NAVBAR)
+       ========================================== -->
+  <header class="navbar" id="navbar">
+    <div class="logo-container">
+      <div class="logo-icon"><i class="fa-solid fa-sun"></i></div>
+      <div class="logo-text">Sunshine <span style="font-weight: 400; font-size: 1.25rem; text-transform: lowercase; color: var(--color-text-secondary);">rp</span></div>
+    </div>
+    
+    <nav>
+      <ul class="nav-links">
+        <li class="nav-item active" id="nav-home"><a href="#" onclick="switchTab('home')"><i class="fa-solid fa-house"></i> Inicio</a></li>
+        <li class="nav-item" id="nav-docs"><a href="#" onclick="switchTab('docs')"><i class="fa-solid fa-book"></i> Normativas</a></li>
+        <li class="nav-item" id="nav-admin"><a href="#" onclick="switchTab('admin')"><i class="fa-solid fa-lock-open"></i> Staff Panel</a></li>
+      </ul>
+    </nav>
+
+    <div class="nav-actions">
+      <!-- Discord Sim Login -->
+      <button class="btn-discord" id="discord-login-btn" onclick="toggleDiscordLogin()">
+        <i class="fa-brands fa-discord"></i> Conectar Discord
+      </button>
+    </div>
+  </header>
+
+  <!-- ==========================================
+       SECCIÓN HERO / BUSCADOR PRINCIPAL
+       ========================================== -->
+  <section class="hero-section" id="hero-section">
+    <div class="hero-banner">
+      <div class="server-badge">
+        <span class="server-pulse"></span>
+        Sunshine Roleplay Oficial
+      </div>
+      <h1 class="hero-title">El Portal Oficial de <span>Sunshine RP</span></h1>
+      <p class="hero-subtitle" id="hero-subtitle-text">
+        Accede al reglamento oficial de la ciudad, guías de comandos, normativas policiales y conéctate directamente al servidor.
+      </p>
+      
+      <!-- Buscador principal -->
+      <div class="hero-search-wrapper">
+        <i class="fa-solid fa-magnifying-glass hero-search-icon"></i>
+        <input type="text" id="global-search" class="hero-search-input" placeholder="Buscar norma o concepto (ej: Powergaming, LSPD, /report)..." onkeyup="handleSearch(event)">
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       VISTA 1: INICIO (LANDING PAGE)
+       ========================================== -->
+  <main class="home-layout" id="home-view">
+    <!-- Panel de Conexión Directa y Terminal Simulator -->
+    <section class="connection-panel">
+      <!-- Izquierda: Acción de conectar -->
+      <div class="connect-left">
+        <h2>Únete a Los Santos en <span>Sunshine RP</span></h2>
+        <p style="color: var(--color-text-secondary); font-size: 0.95rem;">
+          Contamos con Whitelist abierta de manera temporal. Asegúrate de leer la normativa de la ciudad y configurar tu TeamSpeak (TokoVOIP) antes de entrar a jugar.
+        </p>
+        <div class="connect-buttons">
+          <button class="btn-connect-server" onclick="connectToFiveM()">
+            <i class="fa-solid fa-play"></i> CONECTAR AL SERVIDOR
+          </button>
+          <a href="https://discord.gg/sunshinerp" target="_blank" class="btn-discord" style="padding: 1.1rem 2.25rem; font-size: 1.05rem;">
+            <i class="fa-brands fa-discord"></i> COMUNIDAD DISCORD
+          </a>
+        </div>
+      </div>
+      
+      <!-- Derecha: Terminal de Conexión Interactiva -->
+      <div class="connect-terminal">
+        <div class="terminal-header">
+          <div class="terminal-dots">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+          </div>
+          <div class="terminal-title">sunshinerp_terminal.sh</div>
+          <div style="width: 38px;"></div>
+        </div>
+        <div class="terminal-body" id="terminal-content">
+          <div class="terminal-line">
+            <span class="terminal-prompt">$</span>
+            <span class="terminal-text">cat server_status.log</span>
+          </div>
+          <div class="terminal-line">
+            <span class="terminal-text success">Sunshine RP status: ONLINE</span>
+          </div>
+          <div class="terminal-line">
+            <span class="terminal-text info">IP: play.sunshinerp.net | PORT: 30120</span>
+          </div>
+          <div class="terminal-line" id="terminal-live-line">
+            <span class="terminal-prompt">$</span>
+            <span class="terminal-text" id="terminal-typing-text">esperando orden de conexion...</span>
+            <span class="terminal-cursor"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Indicadores de Red (Separados en su propia fila de 3 columnas para mayor legibilidad) -->
+    <section style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;" id="network-status-row">
+      <div class="status-grid" style="flex-direction: row; justify-content: space-between; align-items: center; padding: 1.5rem 2rem;">
+        <span class="status-card-label" style="font-size: 1rem; font-weight: 700; color: var(--color-text-primary);"><i class="fa-solid fa-gamepad" style="font-size: 1.25rem;"></i> Servidor FiveM</span>
+        <span class="status-card-value online" id="player-count">142 / 250 ONLINE</span>
+      </div>
+      
+      <div class="status-grid" style="flex-direction: row; justify-content: space-between; align-items: center; padding: 1.5rem 2rem;">
+        <span class="status-card-label" style="font-size: 1rem; font-weight: 700; color: var(--color-text-primary);"><i class="fa-solid fa-headset" style="font-size: 1.25rem;"></i> TeamSpeak (Voz)</span>
+        <span class="status-card-value online">142 ONLINE</span>
+      </div>
+
+      <div class="status-grid" style="flex-direction: row; justify-content: space-between; align-items: center; padding: 1.5rem 2rem;">
+        <span class="status-card-label" style="font-size: 1rem; font-weight: 700; color: var(--color-text-primary);"><i class="fa-brands fa-discord" style="font-size: 1.25rem;"></i> Discord Oficial</span>
+        <span class="status-card-value online">4,812 ONLINE</span>
+      </div>
+    </section>
+
+    <!-- Sección de Características -->
+    <section>
+      <h2 class="features-section-title">¿Qué te ofrece <span>Sunshine RP</span>?</h2>
+      <div class="features-grid">
+        <!-- Card 1 -->
+        <article class="feature-card">
+          <div class="feature-icon-wrapper"><i class="fa-solid fa-coins"></i></div>
+          <h3 class="feature-title">Economía Equilibrada</h3>
+          <p class="feature-desc">
+            Trabaja legalmente en el puerto, mina o pescadería, u organiza bandas callejeras y mafias con un mercado negro realista que premia el rol antes que el dinero.
+          </p>
+        </article>
+        
+        <!-- Card 2 -->
+        <article class="feature-card">
+          <div class="feature-icon-wrapper"><i class="fa-solid fa-map-location-dot"></i></div>
+          <h3 class="feature-title">Mapeados y Scripts Propios</h3>
+          <p class="feature-desc">
+            Sistemas avanzados de inventario gráfico, concesionarios interactivos, garajes organizados, sede policial LSPD optimizada y múltiples eventos semanales in-game.
+          </p>
+        </article>
+
+        <!-- Card 3 -->
+        <article class="feature-card">
+          <div class="feature-icon-wrapper"><i class="fa-solid fa-users-gear"></i></div>
+          <h3 class="feature-title">Rol Serio y Staff Activo</h3>
+          <p class="feature-desc">
+            Contamos con un equipo de administración activo las 24 horas para guiar a los nuevos usuarios y sancionar comportamientos anti-rol, garantizando inmersión total.
+          </p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==========================================
+       VISTA 2: PORTAL DE NORMAS (WIKI 3 COLUMNAS)
+       ========================================== -->
+  <main class="main-layout" id="docs-view" style="display: none;">
+    <!-- Columna Izquierda: Árbol de categorías -->
+    <aside class="nav-sidebar">
+      <div class="nav-sidebar-widget">
+        <h3 class="nav-sidebar-title">Secciones de Guías</h3>
+        
+        <!-- Grupo 1: Conceptos -->
+        <div class="nav-tree-group">
+          <div class="nav-tree-title"><i class="fa-solid fa-brain"></i> Conceptos de Rol</div>
+          <ul class="nav-tree-items" id="tree-concepts">
+            <!-- Dinámico -->
+          </ul>
+        </div>
+
+        <!-- Grupo 2: Normas -->
+        <div class="nav-tree-group">
+          <div class="nav-tree-title"><i class="fa-solid fa-gavel"></i> Normativa General</div>
+          <ul class="nav-tree-items" id="tree-general">
+            <!-- Dinámico -->
+          </ul>
+        </div>
+
+        <!-- Grupo 3: Facciones -->
+        <div class="nav-tree-group">
+          <div class="nav-tree-title"><i class="fa-solid fa-shield-halved"></i> Facciones</div>
+          <ul class="nav-tree-items" id="tree-factions">
+            <!-- Dinámico -->
+          </ul>
+        </div>
+
+        <!-- Grupo 4: Controles -->
+        <div class="nav-tree-group">
+          <div class="nav-tree-title"><i class="fa-solid fa-keyboard"></i> Controles y Guías</div>
+          <ul class="nav-tree-items" id="tree-commands">
+            <!-- Dinámico -->
+          </ul>
+        </div>
+      </div>
+
+      <!-- Discord Info Widget -->
+      <div class="nav-sidebar-widget" style="background: linear-gradient(135deg, rgba(0, 180, 216, 0.1) 0%, rgba(14, 17, 28, 0) 100%); border-color: rgba(0, 180, 216, 0.25);">
+        <h4 style="font-size: 0.95rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;"><i class="fa-brands fa-discord" style="color: #5865F2;"></i> Soporte Técnico</h4>
+        <p style="font-size: 0.8rem; color: var(--color-text-secondary); line-height: 1.5; margin-bottom: 1rem;">
+          ¿Tienes dudas sobre alguna regla o presenciaste una infracción? Abre un ticket de dudas en nuestro Discord.
+        </p>
+        <a href="https://discord.gg/sunshinerp" target="_blank" class="btn-discord" style="width: 100%; justify-content: center; font-size: 0.8rem; padding: 0.5rem 1rem;">
+          <i class="fa-brands fa-discord"></i> Soporte en Discord
+        </a>
+      </div>
+    </aside>
+
+    <!-- Columna Central: Lector de artículos -->
+    <section class="doc-reader-card" id="doc-reader">
+      <!-- Barra de progreso de lectura superior -->
+      <div class="reading-progress-container">
+        <div class="reading-progress-bar" id="reading-progress-indicator"></div>
+      </div>
+      
+      <div id="doc-active-content">
+        <!-- Renderizado dinámico de la normativa activa -->
+      </div>
+    </section>
+
+    <!-- Columna Derecha: Tabla de Contenidos (TOC) -->
+    <aside class="toc-sidebar">
+      <div class="toc-widget">
+        <h4 class="toc-title">En esta página</h4>
+        <ul class="toc-list" id="toc-list-content">
+          <!-- Rellenado dinámicamente -->
+        </ul>
+      </div>
+    </aside>
+  </main>
+
+  <!-- ==========================================
+       VISTA 3: PANEL DE ADMINISTRACIÓN DE NORMAS
+       ========================================== -->
+  <main class="admin-section" id="admin-view">
+    <div class="admin-header">
+      <div>
+        <h2 style="font-size: 2rem;"><i class="fa-solid fa-lock text-gradient"></i> Staff Panel - Gestión de Normas</h2>
+        <p style="color: var(--color-text-secondary); font-size: 0.95rem; margin-top: 0.25rem;">
+          Redacta, edita o elimina artículos del reglamento oficial.
+        </p>
+      </div>
+      
+      <div style="display: flex; gap: 1rem; align-items: center;">
+        <span style="font-size: 0.85rem; color: var(--color-success); font-weight: 700; background: rgba(16, 185, 129, 0.1); padding: 0.4rem 1rem; border-radius: 50px; border: 1px solid rgba(16, 185, 129, 0.2);">
+          <i class="fa-solid fa-shield"></i> Acceso Staff Autorizado
+        </span>
+      </div>
+    </div>
+
+    <!-- Analytics Dashboard -->
+    <div class="admin-grid">
+      <div class="stats-cards">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fa-solid fa-file-invoice"></i></div>
+          <div class="stat-info">
+            <span class="stat-value" id="admin-total-rules">7</span>
+            <span class="stat-label">Artículos Publicados</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fa-solid fa-pen-nib"></i></div>
+          <div class="stat-info">
+            <span class="stat-value" id="admin-last-edit">2026-06-13</span>
+            <span class="stat-label">Última Modificación</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fa-solid fa-eye"></i></div>
+          <div class="stat-info">
+            <span class="stat-value" id="admin-total-views">3,842</span>
+            <span class="stat-label">Visitas Totales</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Columna Izquierda: Redacción de Artículos -->
+      <section class="admin-form-card">
+        <h3 class="admin-form-title"><i class="fa-solid fa-file-signature text-gradient"></i> Redactar Artículo</h3>
+        <form id="add-rule-form" onsubmit="handlePublishRule(event)">
+          
+          <div class="admin-form-group">
+            <label for="rule-title">Título del Artículo *</label>
+            <input type="text" id="rule-title" class="admin-form-input" required placeholder="Ej: Concepto de Car Jacking, Normativa LSPD">
+          </div>
+
+          <div class="admin-form-row">
+            <div class="admin-form-group">
+              <label for="rule-category">Categoría Principal *</label>
+              <select id="rule-category" class="admin-form-input" required style="background: var(--bg-surface-elevated); color: var(--color-text-primary);">
+                <option value="concepts">Conceptos de Rol</option>
+                <option value="general">Normativa General</option>
+                <option value="factions">Facciones</option>
+                <option value="commands">Controles y Guías</option>
+              </select>
+            </div>
+            
+            <div class="admin-form-group">
+              <label for="rule-tag">Etiqueta de Estado</label>
+              <input type="text" id="rule-tag" class="admin-form-input" placeholder="Ej: FUNDAMENTAL, CRÍTICO, NUEVO">
+            </div>
+          </div>
+
+          <div class="admin-form-row">
+            <div class="admin-form-group">
+              <label for="rule-icon">Icono FontAwesome</label>
+              <input type="text" id="rule-icon" class="admin-form-input" placeholder="Ej: fa-gavel, fa-book-open">
+            </div>
+            
+            <div class="admin-form-group">
+              <label for="rule-summary">Resumen Breve (Buscador) *</label>
+              <input type="text" id="rule-summary" class="admin-form-input" required placeholder="Resumen descriptivo de una línea...">
+            </div>
+          </div>
+
+          <!-- Helper Buttons for HTML injection -->
+          <div class="admin-form-group">
+            <label>Herramientas de Formato Rápido</label>
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button type="button" class="btn-secondary" onclick="insertFormat('kbd')" style="font-size: 0.8rem; padding: 0.4rem 0.75rem;"><i class="fa-solid fa-keyboard"></i> Tecla [KBD]</button>
+              <button type="button" class="btn-secondary" onclick="insertFormat('important')" style="font-size: 0.8rem; padding: 0.4rem 0.75rem; border-color: rgba(0, 180, 216, 0.4);"><i class="fa-solid fa-triangle-exclamation"></i> Alerta Nota</button>
+              <button type="button" class="btn-secondary" onclick="insertFormat('danger')" style="font-size: 0.8rem; padding: 0.4rem 0.75rem; border-color: rgba(239, 68, 68, 0.4);"><i class="fa-solid fa-circle-xmark"></i> Alerta Peligro</button>
+            </div>
+          </div>
+
+          <div class="admin-form-group">
+            <label for="rule-content">Cuerpo del Artículo (Soporta HTML completo) *</label>
+            <textarea id="rule-content" class="admin-form-input" rows="12" required placeholder="Escribe el reglamento aquí. Puedes usar títulos <h3>, párrafos <p> y listas <ul>/<li>..." style="resize: vertical; font-family: monospace; font-size: 0.85rem; line-height: 1.5;"></textarea>
+          </div>
+
+          <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; margin-top: 1rem;">
+            <i class="fa-solid fa-cloud-arrow-up"></i> Publicar Artículo
+          </button>
+        </form>
+      </section>
+
+      <!-- Columna Derecha: Listado de Artículos Existentes -->
+      <section class="admin-table-wrapper">
+        <h3 class="admin-table-title"><i class="fa-solid fa-list text-gradient"></i> Artículos en la Base de Datos</h3>
+        <div style="overflow-x: auto;">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Artículo</th>
+                <th>Categoría</th>
+                <th>Actualizado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="admin-rules-tbody">
+              <!-- Dinámico -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Notificaciones Toasts -->
+  <div class="notification-container" id="notification-container"></div>
+
+  <!-- ==========================================
+       PIE DE PÁGINA (FOOTER)
+       ========================================== -->
+  <footer class="footer">
+    <div class="footer-grid">
+      <!-- Columna Logo -->
+      <div class="footer-col">
+        <div class="footer-logo">Sunshine RP</div>
+        <p class="footer-desc">
+          El portal de normativas oficial de Sunshine RP. Es obligatorio leer y comprender el reglamento antes de iniciar tu rol en la ciudad para evitar sanciones administrativas.
+        </p>
+        <div class="footer-socials">
+          <a href="#" class="social-icon" aria-label="Discord"><i class="fa-brands fa-discord"></i></a>
+          <a href="#" class="social-icon" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+          <a href="#" class="social-icon" aria-label="Twitter"><i class="fa-brands fa-twitter"></i></a>
+        </div>
+      </div>
+      
+      <!-- Columna Secciones -->
+      <div class="footer-col">
+        <h4 class="footer-title">Reglamentos</h4>
+        <ul class="footer-links">
+          <li><a href="#" onclick="switchTab('docs'); loadActiveArticleById('rule-conceptos-basicos');">Conceptos de Rol</a></li>
+          <li><a href="#" onclick="switchTab('docs'); loadActiveArticleById('rule-normativa-general');">Normas Generales</a></li>
+          <li><a href="#" onclick="switchTab('docs'); loadActiveArticleById('rule-robos-secuestros');">Atracos y Rehenes</a></li>
+          <li><a href="#" onclick="switchTab('docs'); loadActiveArticleById('rule-lspd-ems');">Cuerpos Policiales</a></li>
+        </ul>
+      </div>
+
+      <!-- Columna Enlaces -->
+      <div class="footer-col">
+        <h4 class="footer-title">Comunidad</h4>
+        <ul class="footer-links">
+          <li><a href="https://discord.gg/sunshinerp" target="_blank">Entrar a Discord</a></li>
+          <li><a href="#" onclick="switchTab('admin')">Acceso Staff</a></li>
+          <li><a href="https://status.sunshinerp.net" target="_blank">Estado del Servidor</a></li>
+        </ul>
+      </div>
+
+      <!-- Columna Legal -->
+      <div class="footer-col">
+        <h4 class="footer-title">Aviso de Exención</h4>
+        <p style="font-size: 0.8rem; color: var(--color-text-secondary); line-height: 1.5;">
+          No estamos asociados con Rockstar Games, Cfx.re o Take-Two. Todo el contenido redactado aquí es propiedad intelectual de Sunshine RP para el funcionamiento de su servidor de rol.
+        </p>
+      </div>
+    </div>
+
+    <!-- Copyright -->
+    <div class="footer-bottom">
+      <p>&copy; 2026 Sunshine RP. Todos los derechos reservados.</p>
+      <p>Diseño premium wiki sin compras.</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/rules.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
